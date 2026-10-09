@@ -1,0 +1,122 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile for students, faculty, and educational technology staff",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Firebase Auth UID" },
+        "email": { "type": "string", "format": "email", "description": "User Google email" },
+        "displayName": { "type": "string", "description": "User display name" },
+        "photoURL": { "type": "string", "description": "Profile picture URL" },
+        "role": { "type": "string", "enum": ["admin", "user"], "description": "Role of user" },
+        "phone": { "type": "string", "description": "Contact phone number" },
+        "studentId": { "type": "string", "description": "Student or Staff identification number" },
+        "department": { "type": "string", "description": "Department or section" },
+        "faculty": { "type": "string", "description": "Faculty or institution" },
+        "createdAt": { "type": "string", "description": "Profile creation timestamp" },
+        "updatedAt": { "type": "string", "description": "Profile update timestamp" }
+      },
+      "required": ["uid", "email", "displayName", "role"]
+    },
+    "Admin": {
+      "title": "Admin",
+      "description": "Admin identity document keyed by UID",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Admin UID" },
+        "email": { "type": "string", "format": "email", "description": "Admin email" },
+        "addedAt": { "type": "string", "description": "Timestamp when added as admin" },
+        "addedBy": { "type": "string", "description": "Email or UID of admin who added them" }
+      },
+      "required": ["uid", "email"]
+    },
+    "AdminEmail": {
+      "title": "AdminEmail",
+      "description": "Authorized admin email records",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "format": "email", "description": "Authorized email address" },
+        "addedAt": { "type": "string", "description": "Timestamp when authorized" },
+        "addedBy": { "type": "string", "description": "Authorizing user" }
+      },
+      "required": ["email"]
+    },
+    "Equipment": {
+      "title": "Equipment",
+      "description": "Educational technology equipment item available for borrowing",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique equipment item ID" },
+        "code": { "type": "string", "description": "Department equipment inventory code (e.g. EDTECH-CAM-001)" },
+        "name": { "type": "string", "description": "Equipment name" },
+        "category": { "type": "string", "description": "Category: กล้อง, ไมโครโฟน, ขาตั้งกล้อง, โปรเจกเตอร์, ไฟสตูดิโอ, etc." },
+        "totalQuantity": { "type": "number", "description": "Total stock owned by department" },
+        "availableQuantity": { "type": "number", "description": "Currently available units for borrowing" },
+        "status": { "type": "string", "enum": ["available", "low_stock", "maintenance", "unavailable"], "description": "Operating status" },
+        "imageUrl": { "type": "string", "description": "Equipment image photo URL or base64 preview" },
+        "description": { "type": "string", "description": "Specifications and details" },
+        "accessories": { "type": "string", "description": "Included accessories in the bag/kit" },
+        "location": { "type": "string", "description": "Storage cabinet or lab room location" },
+        "createdAt": { "type": "string", "description": "Record creation timestamp" },
+        "updatedAt": { "type": "string", "description": "Last update timestamp" }
+      },
+      "required": ["id", "code", "name", "category", "totalQuantity", "availableQuantity", "status"]
+    },
+    "Booking": {
+      "title": "Booking",
+      "description": "Borrowing reservation record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique booking reservation ID" },
+        "userId": { "type": "string", "description": "Borrower UID" },
+        "userName": { "type": "string", "description": "Borrower display name" },
+        "userEmail": { "type": "string", "format": "email", "description": "Borrower email" },
+        "userPhone": { "type": "string", "description": "Borrower telephone number" },
+        "userStudentId": { "type": "string", "description": "Borrower Student or staff ID" },
+        "equipmentId": { "type": "string", "description": "ID of equipment requested" },
+        "equipmentCode": { "type": "string", "description": "Code of equipment" },
+        "equipmentName": { "type": "string", "description": "Name of equipment" },
+        "equipmentImageUrl": { "type": "string", "description": "Equipment image thumbnail" },
+        "quantity": { "type": "number", "description": "Number of units borrowed" },
+        "startDate": { "type": "string", "description": "Borrow date (YYYY-MM-DD)" },
+        "endDate": { "type": "string", "description": "Expected return date (YYYY-MM-DD)" },
+        "purpose": { "type": "string", "description": "Academic or educational purpose of borrowing" },
+        "status": { "type": "string", "enum": ["pending", "approved", "active", "returned", "rejected", "cancelled"], "description": "Workflow status" },
+        "rejectionReason": { "type": "string", "description": "Reason given if rejected" },
+        "approvedAt": { "type": "string", "description": "Timestamp when approved" },
+        "approvedBy": { "type": "string", "description": "Admin who approved" },
+        "pickedUpAt": { "type": "string", "description": "Timestamp when physical pickup occurred" },
+        "returnedAt": { "type": "string", "description": "Timestamp when returned" },
+        "returnCondition": { "type": "string", "description": "Equipment condition check on return" },
+        "returnNotes": { "type": "string", "description": "Inspector notes on condition or missing items" },
+        "returnInspectedBy": { "type": "string", "description": "Admin inspector who verified return" },
+        "createdAt": { "type": "string", "description": "Timestamp when booking requested" },
+        "updatedAt": { "type": "string", "description": "Timestamp when booking record updated" }
+      },
+      "required": ["id", "userId", "equipmentId", "quantity", "startDate", "endDate", "purpose", "status"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "User" },
+      "description": "User profiles"
+    },
+    "/admins/{adminId}": {
+      "schema": { "$ref": "Admin" },
+      "description": "Admin UID list"
+    },
+    "/admin_emails/{emailId}": {
+      "schema": { "$ref": "AdminEmail" },
+      "description": "Configured authorized admin emails"
+    },
+    "/equipment/{equipmentId}": {
+      "schema": { "$ref": "Equipment" },
+      "description": "Equipment catalogue items"
+    },
+    "/bookings/{bookingId}": {
+      "schema": { "$ref": "Booking" },
+      "description": "Borrow and return booking records"
+    }
+  }
+}

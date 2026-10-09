@@ -1,0 +1,8 @@
+{
+  "name": "Remix Educational Technology Equipment Borrowing System",
+  "description": "ระบบยืม-คืนอุปกรณ์ ภาควิชาเทคโนโลยีการศึกษา พร้อมระบบจัดการสิทธิ์ บันทึกการยืม-คืน และตรวจเช็กอุปกรณ์",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
